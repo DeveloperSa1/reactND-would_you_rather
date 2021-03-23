@@ -5,6 +5,15 @@ import {
     _saveQuestionAnswer,
 } from './_Data'
 
+export function getInitialData () {
+    return Promise.all([
+      _getUsers(),
+      _getQuestions(),
+    ]).then(([users, questions]) => ({
+      users,
+      questions,
+    }))
+  }
 
 export const getUsers = async () => {
 
@@ -25,10 +34,6 @@ export const getQuestions = async () => {
 
 
 
-
-// export function savePollAPI (info) {
-//     return _saveQuestion(info)
-// }
 
 export function saveQuestionAnswer ({ authedUser, qid, answer }) {
     return _saveQuestionAnswer({ authedUser, qid, answer });
