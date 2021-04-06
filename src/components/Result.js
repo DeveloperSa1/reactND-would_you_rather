@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import {formatQuestion} from '../utils/_helpers'
+// import {formatQuestion} from '../utils/_Data'
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -153,7 +153,8 @@ function mapStateToProps({authedUser, users, questions}, {id}) {
 
   return {
       authedUser,
-      question : formatQuestion(question,users[question.author],authedUser),
+      // question : formatQuestion(question,users[question.author],authedUser),
+      question,
      
   }
 }

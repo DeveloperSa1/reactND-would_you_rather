@@ -1,151 +1,106 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import  withStyles  from '@material-ui/core/styles/withStyles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Question from './Question'
-import Result from './Result'
-import {connect} from "react-redux"
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from 'react-router-dom';
+import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import moment from "moment";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
 
-// console.log('Prop-tyopes', PropTypes)
-// console.log('withStyles', withStyles)
-// console.log('Tabs', Tabs)
-// console.log('Tab', Tab)
-// console.log('Typography', Typography)
-// console.log('Box', Box)
-// console.log('Grid', Grid)
-// console.log('UnAnswered', UnAnswered)
-// console.log('Answered', Answered)
-// console.log('connect', connect)
+const styles = ({ theme }) => {
+  
+  return {
+    root: {
+      maxWidth: 345,
+      marginBottom: "1rem",
+    },
+    media: {
+      height: 0,
+      paddingTop: "56.25%", // 16:9
+    },
 
-
-
-
-
-
-
-
-const TabPanel = props => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography component="span">{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+   
+   
+  };
 };
 
-const a11yProps = index => {
+class Question extends React.Component {
+  render() {
+    const { classes, question, user } = this.props;
+    const { author, optionOne, optionTwo, date, id } = question;
+    const isAnswered = Object.keys(user.answers).includes(id);
+    return (
+      <Card className={classes.root}>
+        <CardHeader
+          avatar={
+            <Avatar
+              src={user.avatar}
+              aria-label="recipe"
+              className={classes.avatar}
+            ></Avatar>
+          }
+          title={`${author.name} Asks you`}
+          subheader={date}
+        />
+
+        <CardContent>
+          <Typography variant="h6" align="center" gutterBottom>
+            Would you rather?
+          </Typography>
+
+          <List>
+            <ListItem divider>
+              <ListItemText primary={optionOne.text} />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemText primary={optionTwo.text} />
+            </ListItem>
+            <Divider />
+          </List>
+          {!isAnswered ? (
+            <Link to={`/question/${id}`}><Button variant="contained" color="primary">
+            Answer That
+          </Button></Link>
+            
+          ) : (
+            
+            <Link to={`/question/${id}`}><Button variant="contained" color="primary">
+            Show the Result
+          </Button></Link>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+}
+
+const mapStateToProps = ({ authedUser, users, questions }, { id }) => {
+  const question = questions[id];
+
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    user: users[authedUser],
+    question: {
+      id: id,
+      author: users[question.author],
+      optionOne: {
+        text: question.optionOne.text,
+      },
+      optionTwo: {
+        text: question.optionTwo.text,
+      },
+      date: moment(question.timestamp).format("ll")
+    },
   };
-}
+};
 
-
-
-const styles = theme => ({
-    root: {
-            flexGrow: 1,
-            backgroundColor: theme.palette.background.paper,
-          },
-          card: {
-            border: '2px solid',
-            borderColor: '#E7EDF3',
-            borderRadius: 16,
-            transition: '0.4s',
-            '&:hover': {
-              borderColor: '#5B9FED',
-            },
-          },
-  });
-  
-
-
-class Questions extends React.Component {
-
-    state = {
-        activeTab : 0,
-      }
-
-      
-handleChange = (e,newValue) => {
-
-    this.setState({
-      activeTab : newValue
-    })
-  }
-
-    render() {
-        const {activeTab} = this.state
-        const {classes,unanswered,answered} = this.props
-        console.log(answered,unanswered);
-        return (
-      
-      
-       <Box>
-        <Tabs value={activeTab} onChange={this.handleChange} centered >
-        <Tab label="UnAnswered" {...a11yProps(0)} />
-          <Tab label="Answered" {...a11yProps(1)} />
-          
-          
-        </Tabs>
-        
-
-      <TabPanel value={activeTab} index={0}>
-      <Grid container spacing={4} justify={'center'} > 
-<Grid className={classes.card} item >
-{unanswered.map((id)=> (
-  <Question key={id} id={id} />
-))}
-
-
-    </Grid>
-    </Grid>
-      </TabPanel>
-      <TabPanel value={activeTab} index={1}>
-      <Grid container spacing={4} justify={'center'} > 
-<Grid className={classes.card} item >
-
-{answered.map((id)=> (
-  <Result key={id} id={id} />
-))}
-
-    </Grid>
-    </Grid>
-      </TabPanel>
-      </Box>
-
-        )
-    }
-}
-function mapStateToProps ({ questions, authedUser, users }) {
-  const  answered = Object.keys(users[authedUser].answers).sort((a,b)=>questions[b].timestamp-questions[a].timestamp);
-  const unanswered = Object.keys(questions).filter(q => ! answered.includes(q)).sort((a,b)=>questions[b].timestamp-questions[a].timestamp);
-
-  return {
-       answered,
-      unanswered
-  }
-}
-export default connect(mapStateToProps)(withStyles(styles)(Questions)) ;
-
+export default connect(mapStateToProps)(withStyles(styles)(Question));

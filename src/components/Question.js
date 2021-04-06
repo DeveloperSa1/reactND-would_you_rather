@@ -98,9 +98,9 @@ class Question extends React.Component {
   };
   render() {
     const { error, value, helperText } = this.state;
-    const { classes } = this.props;
-    const { avatar, name, optionOne, optionTwo } = this.props.question;
-    console.log(this.props.question)
+    const { classes,questions } = this.props;
+    const {name, optionOne, optionTwo } = question;
+    console.log(this.props.questions)
     return (
       <Grid container justify={"center"}>
         <Grid style={{ paddingTop: "3rem" }} item>
@@ -113,7 +113,7 @@ class Question extends React.Component {
                     className={classes.avatar}
                   />
                   <Box>
-                    <h3 className={classes.heading}>{name} Asks ..</h3>
+                    <h3 className={classes.heading}> Asks ..</h3>
                     <p className={classes.subheader}>Would you rather?</p>
                   </Box>
                 </Card>
@@ -134,14 +134,14 @@ class Question extends React.Component {
                         onChange={e => this.handleChange(e.currentTarget.value)}
                       >
                         <FormControlLabel
-                          value={optionOne.text}
+                          value={"optionOne.text"}
                           control={<Radio />}
-                          label={optionOne.text}
+                          label={"optionOne.text"}
                         />
                         <FormControlLabel
-                          value={optionTwo.text}
+                          value={"optionTwo.text"}
                           control={<Radio />}
-                          label={optionTwo.text}
+                          label={"optionTwo.text"}
                         />
                       </RadioGroup>
                       <FormHelperText>{helperText}</FormHelperText>
@@ -165,16 +165,24 @@ class Question extends React.Component {
   }
 }
 
-function mapStateToProps ({ authedUser, users, questions }, { id }) {
+
+const mapStateToProps = ({ authedUser, users, questions }, { id }) => {
   const question = questions[id];
-  const author = question ? users[question.author] : '';
-  const authedUserDetails = users[authedUser];
 
   return {
-      question,
-      author,
-      authedUserDetails
-  }
-}
+    user: users[authedUser],
+    question: {
+      id: id,
+      author: users[question.author],
+      optionOne: {
+        text: question.optionOne.text,
+      },
+      optionTwo: {
+        text: question.optionTwo.text,
+      },
+      date: moment(question.timestamp).format("ll")
+    },
+  };
+};
 
 export default connect(mapStateToProps)(withStyles(styles)(Question));

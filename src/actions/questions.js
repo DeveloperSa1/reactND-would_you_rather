@@ -1,7 +1,7 @@
 import { _getUsers, _getQuestions, _saveQuestion, _saveQuestionAnswer } from '../utils/_Data'
 import {saveQuestionAnswer} from '../utils/api'
 export const RECEIVE_QUESTIONS = 'RECEIVE_QUESTIONS'
-export const SUBMIT_ANSWER = 'SUBMIT_ANSWER'
+export const ADD_QUESTION_ANSWER = 'ADD_QUESTION_ANSWER'
 
 
 export function receiveQuestions (questions) {
@@ -13,7 +13,7 @@ export function receiveQuestions (questions) {
 
 export function addQuestionAnswer(authedUser, qid, answer) {
   return {
-      type: SUBMIT_ANSWER,
+      type: ADD_QUESTION_ANSWER,
       authedUser,
       qid,
       answer
