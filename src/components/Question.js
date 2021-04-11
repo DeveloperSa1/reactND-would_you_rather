@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import {handleSubmitAnswer} from '../actions/questions';
+import moment from "moment";
+import {handleSaveAnswer} from '../actions/users';
 import cx from "clsx";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
@@ -85,22 +86,25 @@ class Question extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { value } = this.state;
-    const { dispatch, id } = this.props;
+    const { dispatch, question , authedUser} = this.props;
+    const { id } = question.id;
     if (!value || value === "") {
       this.setState({
         error: true,
         helperText: "Please Select one option!",
       });
     } else {
-      dispatch(handleSubmitAnswer(id, value));
+      dispatch(handleSaveAnswer(authedUser ,id, value));
+      
       console.log(id,value);
     }
   };
+  
   render() {
     const { error, value, helperText } = this.state;
-    const { classes,questions } = this.props;
-    const {name, optionOne, optionTwo } = question;
-    console.log(this.props.questions)
+    const { classes, user , question } = this.props;
+    const { author, optionOne, optionTwo, date, id } = question;
+    console.log(user);
     return (
       <Grid container justify={"center"}>
         <Grid style={{ paddingTop: "3rem" }} item>
@@ -134,15 +138,15 @@ class Question extends React.Component {
                         onChange={e => this.handleChange(e.currentTarget.value)}
                       >
                         <FormControlLabel
-                          value={"optionOne.text"}
+                          value="optionOne"
                           control={<Radio />}
-                          label={"optionOne.text"}
+                          label={optionOne.text}
                         />
                         <FormControlLabel
-                          value={"optionTwo.text"}
+                          value={optionTwo.text}
                           control={<Radio />}
-                          label={"optionTwo.text"}
-                        />
+                          label={optionTwo.text}
+                          />
                       </RadioGroup>
                       <FormHelperText>{helperText}</FormHelperText>
                       <Button
@@ -166,8 +170,11 @@ class Question extends React.Component {
 }
 
 
-const mapStateToProps = ({ authedUser, users, questions }, { id }) => {
+
+const mapStateToProps = ({ authedUser, users, questions }, props ) => {
+  const id = props.match.params.questionId;
   const question = questions[id];
+
 
   return {
     user: users[authedUser],

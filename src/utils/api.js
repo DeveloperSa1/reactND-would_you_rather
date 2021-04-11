@@ -35,6 +35,6 @@ export const getQuestions = async () => {
 
 
 
-export function saveQuestionAnswer ({ authedUser, qid, answer }) {
+export function saveAnswer (authedUser, qid, answer ) {
     return _saveQuestionAnswer({ authedUser, qid, answer });
 }

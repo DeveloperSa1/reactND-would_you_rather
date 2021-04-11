@@ -3,7 +3,7 @@ import {receiveQuestions} from '../actions/questions'
 import {receivedUsers} from '../actions/users'
 import {setAuthUser} from '../actions/auth'
 
-const AUTH_ID = null
+const AUTH_ID = 'sarahedo'
 
 export function handleInitialData () {
    return (dispatch) => {

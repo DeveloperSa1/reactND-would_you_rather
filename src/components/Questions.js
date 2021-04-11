@@ -33,7 +33,7 @@ const styles = ({ theme }) => {
   };
 };
 
-class Question extends React.Component {
+class Questions extends React.Component {
   render() {
     const { classes, question, user } = this.props;
     const { author, optionOne, optionTwo, date, id } = question;
@@ -103,4 +103,4 @@ const mapStateToProps = ({ authedUser, users, questions }, { id }) => {
   };
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(Question));
+export default connect(mapStateToProps)(withStyles(styles)(Questions));

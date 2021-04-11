@@ -30,7 +30,7 @@ import {handleInitialData} from './actions/shared'
         ) : (
           <Fragment>
           <Grid item>
-        <NavBar />
+        {/* <NavBar /> */}
         </Grid>
           <Switch>
                     <Route path='/' exact component={Dashboard}/>
