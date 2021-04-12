@@ -87,7 +87,7 @@ class Question extends React.Component {
     event.preventDefault();
     const { value } = this.state;
     const { dispatch, question , authedUser} = this.props;
-    const { id } = question.id;
+    const { id } = question;
     if (!value || value === "") {
       this.setState({
         error: true,
@@ -177,6 +177,7 @@ const mapStateToProps = ({ authedUser, users, questions }, props ) => {
 
 
   return {
+    authedUser,
     user: users[authedUser],
     question: {
       id: id,
