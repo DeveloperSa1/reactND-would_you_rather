@@ -37,7 +37,7 @@ const styles = (theme) => ({
 
 class Login extends React.Component {
   state = {
-    user: "", 
+    user: "",
   };
 
   handleChange = (value) => {
@@ -48,19 +48,17 @@ class Login extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if(this.state.user === '') {
-      console.log('error')
-    }else {
-    const { dispatch } = this.props;
-    dispatch(setAuthUser(this.state.user));
-    console.log(this.state.user);
+    if (this.state.user === "") {
+      console.log("error");
+    } else {
+      const { dispatch } = this.props;
+      dispatch(setAuthUser(this.state.user));
+      localStorage.setItem("user", this.state.user);
+    }
   };
-}
 
   render() {
-    const { users, classes,authedUser } = this.props;
-    console.log(authedUser);
-
+    const { users, classes, authedUser } = this.props;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />

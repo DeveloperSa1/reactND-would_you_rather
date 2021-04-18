@@ -1,99 +1,112 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-
-import AppBar from '@material-ui/core/AppBar'
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { Link } from "react-router-dom";
+import { setAuthUser } from "../actions/auth";
+import AppBar from "@material-ui/core/AppBar";
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
-import Avatar from '@material-ui/core/Avatar';
-import { positions, right } from '@material-ui/system';
-
-
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
+import Dashboard from "../components/Dashboard";
+import LeaderBoard from "../components/LeaderBoard";
+import NewQuestion from "../components/NewQuestion";
+import Avatar from "@material-ui/core/Avatar";
+import { positions, right } from "@material-ui/system";
 
 const styles = (theme) => ({
   root: {
-    flexGrow: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  button : {
-    marginLeft : "auto"
+  button: {
+    gap: "1rem",
   },
   avatar: {
     width: theme.spacing(5),
     height: theme.spacing(5),
-    marginTop : "3px"
+    marginTop: "3px",
   },
-  flex : {
-    justifyContent : "center"
+  flex: {
+    justifyContent: "center",
   },
-  user : {
-    display : "flex",
-    justifyContent : "space-between",
-    gap : "1rem"
-  }
+  user: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "1rem",
+  },
 });
 
- class NavBar extends React.Component {
-
-  state = {
-    activeTab : 0,
-  }
-
-
-
-handleChange = (e,newValue) => {
-
-  this.setState({
-    activeTab : newValue
-  })
-}
-
+class NavBar extends React.Component {
+  handleLogOut = () => {
+    const { dispatch } = this.props;
+    dispatch(setAuthUser(null));
+    localStorage.removeItem("user");
+    console.log("log out success:", this.props.authedUser);
+  };
   render() {
-    const {classes,authedUser} = this.props;
-    const {activeTab} = this.state
+    const { classes, authedUser, history, user } = this.props;
+    const routes = ["/home", "/add", "/leaderboard"];
     return (
-      <AppBar>
-      <Paper className={classes.root}>
-        <div className={classes.flex}></div>
-    <Tabs
-    value= {activeTab}
-    onChange = {this.handleChange}
-      indicatorColor="primary"
-      textColor="primary"
-      centered
-    >
-      
-      {/* style={{position : 'absolute', right : 0}} */}
-      
-      <Tab label="Questions" />
-      <Tab label="New Question"  />
-      <Tab label="Leader Board"  />
-      <div className={classes.user}>
-      
-      <Avatar alt={authedUser} src="/static/images/avatar/1.jpg" className={classes.avatar} />
-      <Typography variant="h6" color="primary">
-        Hello {authedUser}
-      </Typography>
-      </div>
-    </Tabs>
-    
-    
-    
-    
-  </Paper>
-      </AppBar>
+      <>
+        <AppBar color="transparent" className={classes.root}>
+          <Tabs
+            value={
+              history.location.pathname !== "/"
+                ? history.location.pathname
+                : false
+            }
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+            style={{ gap: "1rem" }}
+          >
+            <Tab label="Home" component={Link} to="/home" value={routes[0]} />
+            <Tab
+              label="New Question"
+              component={Link}
+              to="/add"
+              value={routes[1]}
+            />
+            <Tab
+              label="Leaderboard"
+              component={Link}
+              to="/leaderboard"
+              value={routes[2]}
+            />
+          </Tabs>
+          <div className={classes.user}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<VerifiedUserIcon />}
+            >
+              Hello , {authedUser}
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+              startIcon={<ExitToAppIcon />}
+              onClick={this.handleLogOut}
+            >
+              Log out
+            </Button>
+          </div>
+        </AppBar>
+      </>
     );
-  
-  
   }
 }
 
-
-const mapStateToProps = ({ authedUser }) => {
+const mapStateToProps = ({ authedUser, users }) => {
   return {
-    authedUser
-  }
-}
+    authedUser,
+    user: users[authedUser],
+  };
+};
 export default connect(mapStateToProps)(withStyles(styles)(NavBar));
