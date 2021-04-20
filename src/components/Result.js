@@ -2,6 +2,7 @@ import React from "react";
 import cx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import {Redirect} from 'react-router-dom'
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
@@ -84,8 +85,12 @@ const styles = ({ spacing, palette }) => {
 
 class Results extends React.Component {
   render() {
-    const { classes, user, question,history } = this.props;
-    const { author, optionOne, optionTwo, id } = question;
+
+    
+
+    const { classes, user, question,history,isQuestion } = this.props;
+    if(question === undefined) return <Redirect to='/not_found'/>
+    const { author, optionOne, optionTwo, id, } = question;
     const optionOneVotes = question.optionOne.votes.length;
     const optionTwoVotes = question.optionTwo.votes.length;
     const total = optionOneVotes + optionTwoVotes;

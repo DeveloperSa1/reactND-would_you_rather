@@ -111,7 +111,7 @@ class NewQuestion extends React.Component {
       });
     } else {
       dispatch(handleSaveQuestion({ author, optionOneText, optionTwoText }));
-      history.push("/home");
+      history.push("/");
     }
   };
 

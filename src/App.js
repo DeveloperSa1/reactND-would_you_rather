@@ -22,9 +22,10 @@ class App extends Component {
           <Fragment>
             <Grid item>
               {!authedUser ? (
+
                 <Switch>
+                  
                   <Route
-                    exact
                     path="/"
                     component={Login}
                     history={this.props.history}
