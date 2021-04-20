@@ -3,8 +3,7 @@ import {receiveQuestions} from '../actions/questions'
 import {receivedUsers} from '../actions/users'
 import {setAuthUser} from '../actions/auth'
 
-const AUTH_ID = null
-// const AUTH_ID = 'sarahedo'
+const AUTH_ID = localStorage.getItem("user") || null
 
 export const handleInitialData = () => {
    return (dispatch) => {

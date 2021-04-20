@@ -8,6 +8,7 @@ import Card from "@material-ui/core/Card";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Progress from "./utils/Progress";
+import NavBar from '../layout/NavBar'
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 const styles = ({ spacing, palette }) => {
@@ -83,7 +84,7 @@ const styles = ({ spacing, palette }) => {
 
 class Results extends React.Component {
   render() {
-    const { classes, user, question } = this.props;
+    const { classes, user, question,history } = this.props;
     const { author, optionOne, optionTwo, id } = question;
     const optionOneVotes = question.optionOne.votes.length;
     const optionTwoVotes = question.optionTwo.votes.length;
@@ -91,6 +92,7 @@ class Results extends React.Component {
     console.log(this.props);
     return (
       <Grid container justify={"center"} spaceing={9}>
+       <NavBar history={history} question={question.id}/>
         <Card className={classes.root}>
           <div className={classes.details}>
             <Grid item>

@@ -51,10 +51,11 @@ class Login extends React.Component {
     if (this.state.user === "") {
       console.log("error");
     } else {
-      const { dispatch } = this.props;
+      const { dispatch, history,location } = this.props;
       dispatch(setAuthUser(this.state.user));
       localStorage.setItem("user", this.state.user);
-    }
+      history.push('/')
+  }
   };
 
   render() {

@@ -4,6 +4,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Login from "./components/Login";
 import Result from "./components/Result";
 import NewQuestion from "./components/NewQuestion";
+import NotFound from "./components/NotFound";
 import Dashboard from "./components/Dashboard";
 import LeaderBoard from "./components/LeaderBoard";
 import { connect } from "react-redux";
@@ -16,52 +17,46 @@ class App extends Component {
   render() {
     const authedUser = this.props.authedUser;
     return (
-      // <Router>
       <Grid container spacing={9} justify="space-between" direction="column">
         <BrowserRouter>
-          {authedUser === null ? (
-            <>
-              <Redirect to="/" />
-              <Switch>
-                <Route path="/" exact component={Login} />
-              </Switch>
-            </>
-          ) : (
-            <Fragment>
-              <Grid item>
-                <Route
-                  path="/"
-                  render={(history) => (
-                    <>
-                      <Redirect from="/" to="/home" />
-                    </>
-                  )}
-                ></Route>
+          <Fragment>
+            <Grid item>
+              {!authedUser ? (
                 <Switch>
                   <Route
-                    path="/home"
-                    component={Dashboard}
+                    exact
+                    path="/"
+                    component={Login}
                     history={this.props.history}
                   />
-                  <Route
-                    path="/add"
-                    component={NewQuestion}
-                    history={this.props.history}
-                  />
-                  <Route
-                    path="/leaderboard"
-                    component={LeaderBoard}
-                    history={this.props.history}
-                  />
-                  <Route
-                    path="/question/:questionId"
-                    component={Result}
-                    history={this.props.history}
-                  />
+                  <Route component={NotFound} />
                 </Switch>
-              </Grid>
-            </Fragment>
-          )}
+              ) : (
+                <>
+                  <Switch>
+                    <Route
+                      exact
+                      path="/"
+                      component={Dashboard}
+                      history={this.props.history}
+                    />
+                    <Route
+                      path="/add"
+                      component={NewQuestion}
+                      history={this.props.history}
+                    />
+                    <Route
+                      path="/leaderboard"
+                      component={LeaderBoard}
+                      history={this.props.history}
+                    />
+                    <Route path="/question/:questionId" component={Result} />
+                    <Route component={NotFound} />
+                  </Switch>
+                </>
+              )}
+            </Grid>
+          </Fragment>
         </BrowserRouter>
       </Grid>
     );

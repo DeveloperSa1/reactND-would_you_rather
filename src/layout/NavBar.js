@@ -42,29 +42,30 @@ const styles = (theme) => ({
 
 class NavBar extends React.Component {
   handleLogOut = () => {
-    const { dispatch } = this.props;
+    const { dispatch , history} = this.props;
     dispatch(setAuthUser(null));
     localStorage.removeItem("user");
     console.log("log out success:", this.props.authedUser);
+    history.push('/')
   };
   render() {
-    const { classes, authedUser, history, user } = this.props;
-    const routes = ["/home", "/add", "/leaderboard"];
+    const { classes, authedUser, history, questions,question} = this.props; 
+    const routes = ["/", "/add", "/leaderboard",`/question/${question}`];
     return (
       <>
         <AppBar color="transparent" className={classes.root}>
           <Tabs
             value={
-              history.location.pathname !== "/"
-                ? history.location.pathname
-                : false
+              history.location.pathname === `/question/${question}`
+                ? false
+                : history.location.pathname
             }
             indicatorColor="primary"
             textColor="primary"
             centered
             style={{ gap: "1rem" }}
           >
-            <Tab label="Home" component={Link} to="/home" value={routes[0]} />
+            <Tab label="Home" component={Link} to="/" value={routes[0]} />
             <Tab
               label="New Question"
               component={Link}
@@ -77,6 +78,12 @@ class NavBar extends React.Component {
               to="/leaderboard"
               value={routes[2]}
             />
+             {/* <Tab
+              label="Leaderboard"
+              component={Link}
+              to={`/question/${questions[question]}`}
+              value={routes[3]}
+            /> */}
           </Tabs>
           <div className={classes.user}>
             <Button
@@ -103,8 +110,10 @@ class NavBar extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authedUser, users }) => {
+const mapStateToProps = ({ authedUser, users,questions }) => {
+  // const question = questions.id
   return {
+    questions,
     authedUser,
     user: users[authedUser],
   };
